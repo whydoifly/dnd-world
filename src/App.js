@@ -8,6 +8,7 @@ import CharacterCard from './components/CharacterCard';
 import CharacterDetail from './components/CharacterDetail';
 import CharacterForm from './components/CharacterForm';
 import UserList from './components/UserList';
+import Breadcrumbs from './components/Breadcrumbs';
 import NavBar from './components/NavBar';
 import { AuthProvider, useAuth } from './AuthContext';
 import './components/CharacterForm.css';
@@ -28,6 +29,7 @@ const App = () => (
   <Router>
     <AuthProvider>
       <NavBar />
+      <Breadcrumbs />
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
