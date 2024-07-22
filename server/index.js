@@ -27,8 +27,9 @@ mongoose
 
 // User Schema
 const userSchema = new mongoose.Schema({
-  username: String,
-  password: String,
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   isAdmin: { type: Boolean, default: false },
 });
 
@@ -71,18 +72,27 @@ const isAdmin = (req, res, next) => {
 
 // Routes
 app.post('/api/register', async (req, res) => {
-  const { username, password, isAdmin } = req.body;
+  const { username, password, email, isAdmin } = req.body;
 
   try {
     // Check if the username already exists
-    const existingUser = await User.findOne({ username });
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
-      return res.status(400).json({ message: 'Username already exists.' });
+      if (existingUser.username === username) {
+        return res.status(400).json({ message: 'Username already exists.' });
+      } else if (existingUser.email === email) {
+        return res.status(400).json({ message: 'Email already exists.' });
+      }
     }
 
     // If the username is not taken, proceed to create a new user
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, password: hashedPassword, isAdmin });
+    const user = new User({
+      username,
+      password: hashedPassword,
+      email,
+      isAdmin,
+    });
     await user.save();
     res.status(201).json({ message: 'User registered.' });
   } catch (err) {
@@ -128,6 +138,21 @@ app.post('/api/characters', verifyToken, isAdmin, async (req, res) => {
     res.status(500).json({ message: 'Error creating character' });
   }
 });
+
+// Route to get a specific character by ID
+app.get('/api/characters/:id', verifyToken, async (req, res) => {
+  try {
+    const character = await Character.findById(req.params.id);
+    if (!character) {
+      return res.status(404).json({ message: 'Character not found' });
+    }
+    res.json(character);
+  } catch (err) {
+    console.error('Error fetching character:', err);
+    res.status(500).json({ message: 'Error fetching character' });
+  }
+});
+
 
 app.delete('/api/characters/:id', verifyToken, isAdmin, async (req, res) => {
   try {
