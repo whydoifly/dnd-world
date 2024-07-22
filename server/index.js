@@ -9,7 +9,8 @@ dotenv.config(); // Load environment variables from .env file
 
 const app = express();
 const PORT = process.env.PORT || 5001;
-const JWT_SECRET = "e2cbacf5694ab17297224d2b3c0903f3116082cc6445b4e603fb5c21b22d3028f761d57acd41967fd41a42417798c96ffc065fa544fb46634aa3bfd89fcc7137"; // Use the JWT secret key from the environment
+const JWT_SECRET =
+  'e2cbacf5694ab17297224d2b3c0903f3116082cc6445b4e603fb5c21b22d3028f761d57acd41967fd41a42417798c96ffc065fa544fb46634aa3bfd89fcc7137'; // Use the JWT secret key from the environment
 
 console.log('JWT_SECRET:', JWT_SECRET); // Verify the secret key is loaded
 
@@ -19,9 +20,10 @@ app.use(express.json({ limit: '50mb' }));
 
 // MongoDB Connection
 const mongoURI = 'mongodb://localhost:27017/dnd-app';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch((err) => console.error('MongoDB connection error:', err));
 
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -46,7 +48,10 @@ const Character = mongoose.model('Character', characterSchema);
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.status(401).json({ message: 'Access denied. No token provided.' });
+  if (!token)
+    return res
+      .status(401)
+      .json({ message: 'Access denied. No token provided.' });
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -59,28 +64,46 @@ const verifyToken = (req, res, next) => {
 
 // Middleware to check admin rights
 const isAdmin = (req, res, next) => {
-  if (!req.user.isAdmin) return res.status(403).json({ message: 'Access denied. Admins only.' });
+  if (!req.user.isAdmin)
+    return res.status(403).json({ message: 'Access denied. Admins only.' });
   next();
 };
 
 // Routes
 app.post('/api/register', async (req, res) => {
   const { username, password, isAdmin } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = new User({ username, password: hashedPassword, isAdmin });
-  await user.save();
-  res.status(201).json({ message: 'User registered.' });
+
+  try {
+    // Check if the username already exists
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Username already exists.' });
+    }
+
+    // If the username is not taken, proceed to create a new user
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ username, password: hashedPassword, isAdmin });
+    await user.save();
+    res.status(201).json({ message: 'User registered.' });
+  } catch (err) {
+    console.error('Error registering user:', err);
+    res.status(500).json({ message: 'Error registering user' });
+  }
 });
 
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
-  if (!user) return res.status(400).json({ message: 'Invalid username or password.' });
+  if (!user)
+    return res.status(400).json({ message: 'Invalid username or password.' });
 
   const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) return res.status(400).json({ message: 'Invalid username or password.' });
+  if (!validPassword)
+    return res.status(400).json({ message: 'Invalid username or password.' });
 
-  const token = jwt.sign({ _id: user._id, isAdmin: user.isAdmin }, JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ _id: user._id, isAdmin: user.isAdmin }, JWT_SECRET, {
+    expiresIn: '1h',
+  });
   res.json({ token, isAdmin: user.isAdmin });
 });
 
@@ -145,7 +168,11 @@ app.put('/api/users/:id', verifyToken, isAdmin, async (req, res) => {
   try {
     const userId = req.params.id;
     const { isAdmin } = req.body;
-    const user = await User.findByIdAndUpdate(userId, { isAdmin }, { new: true });
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { isAdmin },
+      { new: true }
+    );
     res.status(200).json(user);
   } catch (err) {
     console.error('Error updating user:', err);
