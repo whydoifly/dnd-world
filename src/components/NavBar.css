@@ -1,22 +1,37 @@
-/* src/components/NavBar.css */
-nav {
-    padding: 10px;
+.navbar {
     background-color: #333;
+    color: #fff;
+    padding: 10px;
 }
 
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+.navbar-admin {
+    background-color: red;
+    /* Red background for admin */
+}
+
+.navbar ul {
+    list-style: none;
     display: flex;
     justify-content: space-around;
+    padding: 0;
+    margin: 0;
 }
 
-li {
-    display: inline;
+.navbar ul li {
+    margin: 0 10px;
 }
 
-a {
-    color: white;
+.navbar ul li a,
+.navbar ul li button {
+    color: #fff;
     text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.navbar ul li button:hover,
+.navbar ul li a:hover {
+    text-decoration: underline;
 }

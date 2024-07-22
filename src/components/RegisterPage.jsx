@@ -22,7 +22,7 @@ const RegisterPage = () => {
       alert('User registered successfully');
       setUsername('');
       setPassword('');
-      setIsAdmin(false);
+      setIsAdmin(isAdmin);
     } else {
       alert('Failed to register user');
     }

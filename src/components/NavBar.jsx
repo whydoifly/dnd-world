@@ -13,7 +13,7 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${user && user.isAdmin ? 'navbar-admin' : ''}`}>
       <ul>
         <li>
           <Link to="/">Home</Link>
