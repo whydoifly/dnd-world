@@ -117,5 +117,41 @@ app.delete('/api/characters/:id', verifyToken, isAdmin, async (req, res) => {
   }
 });
 
+// Route to get all users (admin only)
+app.get('/api/users', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const users = await User.find({}, '-password'); // Exclude password field
+    res.json(users);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).json({ message: 'Error fetching users' });
+  }
+});
+
+// Route to delete a user (admin only)
+app.delete('/api/users/:id', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const userId = req.params.id;
+    await User.findByIdAndDelete(userId);
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).json({ message: 'Error deleting user' });
+  }
+});
+
+// Route to update a user role (admin only)
+app.put('/api/users/:id', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { isAdmin } = req.body;
+    const user = await User.findByIdAndUpdate(userId, { isAdmin }, { new: true });
+    res.status(200).json(user);
+  } catch (err) {
+    console.error('Error updating user:', err);
+    res.status(500).json({ message: 'Error updating user' });
+  }
+});
+
 // Start Server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

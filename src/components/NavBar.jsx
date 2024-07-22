@@ -10,6 +10,7 @@ const NavBar = () => {
 
   const handleLogout = () => {
     logout();
+    navigate('/')
   };
 
   return (
@@ -24,9 +25,14 @@ const NavBar = () => {
               <Link to="/characters">Characters</Link>
             </li>
             {user.isAdmin && (
-              <li>
-                <Link to="/create-character">Create Character</Link>
-              </li>
+              <>
+                <li>
+                  <Link to="/create-character">Create Character</Link>
+                </li>
+                <li>
+                  <Link to="/users">Manage Users</Link>
+                </li>
+              </>
             )}
             <li>
               <button onClick={handleLogout}>Logout</button>

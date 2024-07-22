@@ -7,6 +7,7 @@ import RegisterPage from './components/RegisterPage';
 import CharacterCard from './components/CharacterCard';
 import CharacterDetail from './components/CharacterDetail';
 import CharacterForm from './components/CharacterForm';
+import UserList from './components/UserList';
 import NavBar from './components/NavBar';
 import { AuthProvider, useAuth } from './AuthContext';
 import './components/CharacterForm.css';
@@ -32,6 +33,7 @@ const App = () => (
         <Route path="/characters" element={<ProtectedRoute element={<CharacterCard />} />} />
         <Route path="/character/:id" element={<ProtectedRoute element={<CharacterDetail />} />} />
         <Route path="/create-character" element={<AdminRoute element={<CharacterForm />} />} />
+        <Route path="/users" element={<AdminRoute element={<UserList />} />} />
       </Routes>
     </AuthProvider>
   </Router>
