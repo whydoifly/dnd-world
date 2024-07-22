@@ -1,5 +1,6 @@
 // src/components/CharacterForm.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './CharacterForm.css';
 
 const CharacterForm = () => {
@@ -8,34 +9,34 @@ const CharacterForm = () => {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState('');
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
+    
+    try {
+      const response = await fetch('http://localhost:5001/api/characters', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name, size, description, image }),
+      });
 
-    const characterData = {
-      name,
-      size,
-      description,
-      image
-    };
-
-    console.log('Sending data:', characterData); // Log data being sent
-
-    const response = await fetch('http://localhost:5001/api/characters', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(characterData)
-    });
-
-    if (response.ok) {
-      alert('Character created successfully');
-      setName('');
-      setSize('');
-      setDescription('');
-      setImage('');
-    } else {
-      alert('Failed to create character');
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Character created:', data);
+        navigate('/characters');
+      } else {
+        const errorData = await response.json();
+        console.error('Error creating character:', errorData.message);
+        alert(errorData.message);
+      }
+    } catch (error) {
+      console.error('Error creating character:', error);
+      alert('An error occurred while creating the character.');
     }
   };
 
