@@ -12,6 +12,8 @@ import NavBar from './components/NavBar';
 import { AuthProvider, useAuth } from './AuthContext';
 import './components/CharacterForm.css';
 
+import './App.css';
+
 const ProtectedRoute = ({ element }) => {
   const { user } = useAuth();
   return user ? element : <Navigate to="/login" />;
