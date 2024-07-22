@@ -5,24 +5,57 @@ import './CharacterForm.css';
 
 const CharacterForm = () => {
   const [name, setName] = useState('');
-  const [size, setSize] = useState('');
-  const [description, setDescription] = useState('');
+  const [armorClass, setArmorClass] = useState('');
+  const [hitPoints, setHitPoints] = useState('');
+  const [speed, setSpeed] = useState('');
+  const [attributes, setAttributes] = useState({
+    strength: '',
+    dexterity: '',
+    constitution: '',
+    intelligence: '',
+    wisdom: '',
+    charisma: '',
+  });
+  const [savingThrows, setSavingThrows] = useState('');
+  const [skills, setSkills] = useState('');
+  const [damageImmunities, setDamageImmunities] = useState('');
+  const [senses, setSenses] = useState('');
+  const [languages, setLanguages] = useState('');
+  const [challenge, setChallenge] = useState('');
+  const [legendaryResistance, setLegendaryResistance] = useState('');
+  const [actions, setActions] = useState('');
+  const [legendaryActions, setLegendaryActions] = useState('');
   const [image, setImage] = useState('');
-
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    
+
     try {
       const response = await fetch('http://localhost:5001/api/characters', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ name, size, description, image }),
+        body: JSON.stringify({
+          name,
+          armorClass,
+          hitPoints,
+          speed,
+          attributes,
+          savingThrows,
+          skills,
+          damageImmunities,
+          senses,
+          languages,
+          challenge,
+          legendaryResistance,
+          actions,
+          legendaryActions,
+          image,
+        }),
       });
 
       if (response.ok) {
@@ -40,47 +73,154 @@ const CharacterForm = () => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImage(reader.result);
-    };
-    if (file) {
-      reader.readAsDataURL(file);
-    }
+  const handleAttributeChange = (e) => {
+    setAttributes({
+      ...attributes,
+      [e.target.name]: e.target.value,
+    });
   };
 
   return (
-    <div className="character-form-container">
-      <form className="character-form" onSubmit={handleSubmit}>
-        <h2>Create New Character</h2>
+    <div className='character-form-container'>
+      <form onSubmit={handleSubmit}>
+        <h2>Create a New Character</h2>
         <input
-          type="text"
+          type='text'
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
+          placeholder='Name'
           required
         />
         <input
-          type="text"
-          value={size}
-          onChange={(e) => setSize(e.target.value)}
-          placeholder="Size"
+          type='number'
+          value={armorClass}
+          onChange={(e) => setArmorClass(e.target.value)}
+          placeholder='Armor Class'
+          required
+        />
+        <input
+          type='text'
+          value={hitPoints}
+          onChange={(e) => setHitPoints(e.target.value)}
+          placeholder='Hit Points'
+          required
+        />
+        <input
+          type='number'
+          value={speed}
+          onChange={(e) => setSpeed(e.target.value)}
+          placeholder='Speed'
+          required
+        />
+        <h3>Attributes</h3>
+        <input
+          type='number'
+          name='strength'
+          value={attributes.strength}
+          onChange={handleAttributeChange}
+          placeholder='Strength'
+          required
+        />
+        <input
+          type='number'
+          name='dexterity'
+          value={attributes.dexterity}
+          onChange={handleAttributeChange}
+          placeholder='Dexterity'
+          required
+        />
+        <input
+          type='number'
+          name='constitution'
+          value={attributes.constitution}
+          onChange={handleAttributeChange}
+          placeholder='Constitution'
+          required
+        />
+        <input
+          type='number'
+          name='intelligence'
+          value={attributes.intelligence}
+          onChange={handleAttributeChange}
+          placeholder='Intelligence'
+          required
+        />
+        <input
+          type='number'
+          name='wisdom'
+          value={attributes.wisdom}
+          onChange={handleAttributeChange}
+          placeholder='Wisdom'
+          required
+        />
+        <input
+          type='number'
+          name='charisma'
+          value={attributes.charisma}
+          onChange={handleAttributeChange}
+          placeholder='Charisma'
           required
         />
         <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
+          value={savingThrows}
+          onChange={(e) => setSavingThrows(e.target.value)}
+          placeholder='Saving Throws'
           required
+        />
+        <textarea
+          value={skills}
+          onChange={(e) => setSkills(e.target.value)}
+          placeholder='Skills'
+          required
+        />
+        <textarea
+          value={damageImmunities}
+          onChange={(e) => setDamageImmunities(e.target.value)}
+          placeholder='Damage Immunities'
+          required
+        />
+        <textarea
+          value={senses}
+          onChange={(e) => setSenses(e.target.value)}
+          placeholder='Senses'
+          required
+        />
+        <textarea
+          value={languages}
+          onChange={(e) => setLanguages(e.target.value)}
+          placeholder='Languages'
+          required
+        />
+        <textarea
+          value={challenge}
+          onChange={(e) => setChallenge(e.target.value)}
+          placeholder='Challenge'
+          required
+        />
+        <textarea
+          value={legendaryResistance}
+          onChange={(e) => setLegendaryResistance(e.target.value)}
+          placeholder='Legendary Resistance'
+        />
+        <textarea
+          value={actions}
+          onChange={(e) => setActions(e.target.value)}
+          placeholder='Actions'
+          required
+        />
+        <textarea
+          value={legendaryActions}
+          onChange={(e) => setLegendaryActions(e.target.value)}
+          placeholder='Legendary Actions'
         />
         <input
-          type="file"
-          onChange={handleImageChange}
+          type='text'
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
+          placeholder='Image URL'
           required
         />
-        <button type="submit">Create Character</button>
+        <button type='submit'>Create Character</button>
       </form>
     </div>
   );

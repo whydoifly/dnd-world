@@ -37,10 +37,28 @@ const User = mongoose.model('User', userSchema);
 
 // Character Schema
 const characterSchema = new mongoose.Schema({
-  name: String,
-  size: String,
-  description: String,
-  image: String,
+  name: { type: String, required: true },
+  armorClass: { type: Number, required: true },
+  hitPoints: { type: String, required: true },
+  speed: { type: Number, required: true },
+  attributes: {
+    strength: { type: Number, required: true },
+    dexterity: { type: Number, required: true },
+    constitution: { type: Number, required: true },
+    intelligence: { type: Number, required: true },
+    wisdom: { type: Number, required: true },
+    charisma: { type: Number, required: true }
+  },
+  savingThrows: { type: String, required: true },
+  skills: { type: String, required: true },
+  damageImmunities: { type: String, required: true },
+  senses: { type: String, required: true },
+  languages: { type: String, required: true },
+  challenge: { type: String, required: true },
+  legendaryResistance: { type: String },
+  actions: { type: String, required: true },
+  legendaryActions: { type: String },
+  image: { type: String, required: true }
 });
 
 const Character = mongoose.model('Character', characterSchema);
@@ -129,8 +147,20 @@ app.get('/api/characters', verifyToken, async (req, res) => {
 
 app.post('/api/characters', verifyToken, isAdmin, async (req, res) => {
   try {
-    const { name, size, description, image } = req.body;
-    const newCharacter = new Character({ name, size, description, image });
+    const {
+      name, armorClass, hitPoints, speed,
+      attributes, savingThrows, skills,
+      damageImmunities, senses, languages, challenge,
+      legendaryResistance, actions, legendaryActions, image
+    } = req.body;
+
+    const newCharacter = new Character({
+      name, armorClass, hitPoints, speed,
+      attributes, savingThrows, skills,
+      damageImmunities, senses, languages, challenge,
+      legendaryResistance, actions, legendaryActions, image
+    });
+    
     await newCharacter.save();
     res.status(201).json(newCharacter);
   } catch (err) {

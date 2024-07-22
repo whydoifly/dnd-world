@@ -42,15 +42,43 @@ const CharacterDetail = () => {
     return <div>Loading...</div>;
   }
 
+  const calculateModifier = (score) => {
+    return Math.floor((score - 10) / 2);
+  };
+
   return (
     <div className="character-detail">
       <h2>{character.name}</h2>
       <img src={character.image} alt={character.name} />
-      <p><strong>Size:</strong> {character.size}</p>
-      <p><strong>Description:</strong> {character.description}</p>
-      <p><strong>Class:</strong> {character.class}</p>
-      <p><strong>Alignment:</strong> {character.alignment}</p>
-      {/* Add other character details as needed */}
+      <p><strong>Armor Class:</strong> {character.armorClass}</p>
+      <p><strong>Hit Points:</strong> {character.hitPoints}</p>
+      <p><strong>Speed:</strong> {character.speed}</p>
+      <h3>Attributes</h3>
+      <p><strong>Strength:</strong> {character.attributes.strength} (Modifier: {calculateModifier(character.attributes.strength)})</p>
+      <p><strong>Dexterity:</strong> {character.attributes.dexterity} (Modifier: {calculateModifier(character.attributes.dexterity)})</p>
+      <p><strong>Constitution:</strong> {character.attributes.constitution} (Modifier: {calculateModifier(character.attributes.constitution)})</p>
+      <p><strong>Intelligence:</strong> {character.attributes.intelligence} (Modifier: {calculateModifier(character.attributes.intelligence)})</p>
+      <p><strong>Wisdom:</strong> {character.attributes.wisdom} (Modifier: {calculateModifier(character.attributes.wisdom)})</p>
+      <p><strong>Charisma:</strong> {character.attributes.charisma} (Modifier: {calculateModifier(character.attributes.charisma)})</p>
+      <p><strong>Saving Throws:</strong> {character.savingThrows}</p>
+      <p><strong>Skills:</strong> {character.skills}</p>
+      <p><strong>Damage Immunities:</strong> {character.damageImmunities}</p>
+      <p><strong>Senses:</strong> {character.senses}</p>
+      <p><strong>Languages:</strong> {character.languages}</p>
+      <p><strong>Challenge:</strong> {character.challenge}</p>
+      {character.legendaryResistance && (
+        <>
+          <p><strong>Legendary Resistance:</strong> {character.legendaryResistance}</p>
+        </>
+      )}
+      <h3>Actions</h3>
+      <p>{character.actions}</p>
+      {character.legendaryActions && (
+        <>
+          <h3>Legendary Actions</h3>
+          <p>{character.legendaryActions}</p>
+        </>
+      )}
     </div>
   );
 };
