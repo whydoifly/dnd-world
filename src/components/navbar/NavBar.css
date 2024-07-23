@@ -1,7 +1,11 @@
 .navbar {
-    background-color: #333;
+    background-color: #f8f9fa;
     color: #fff;
     padding: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-admin {
@@ -23,7 +27,7 @@
 
 .navbar ul li a,
 .navbar ul li button {
-    color: #fff;
+    color: #007bff;
     text-decoration: none;
     background: none;
     border: none;

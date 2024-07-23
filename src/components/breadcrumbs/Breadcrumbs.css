@@ -1,6 +1,10 @@
 .breadcrumbs {
     margin: 20px 0;
     font-size: 14px;
+    position: sticky;
+    z-index: 99;
+    padding: 10px;
+    top: 40px;
 }
 
 .breadcrumbs ul {

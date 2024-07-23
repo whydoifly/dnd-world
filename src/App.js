@@ -1,5 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
@@ -15,12 +20,12 @@ import './assets/styles/global.css';
 
 const ProtectedRoute = ({ element }) => {
   const { user } = useAuth();
-  return user ? element : <Navigate to="/login" />;
+  return user ? element : <Navigate to='/login' />;
 };
 
 const AdminRoute = ({ element }) => {
   const { user } = useAuth();
-  return user && user.isAdmin ? element : <Navigate to="/login" />;
+  return user && user.isAdmin ? element : <Navigate to='/login' />;
 };
 
 const App = () => (
@@ -28,14 +33,24 @@ const App = () => (
     <AuthProvider>
       <NavBar />
       <Breadcrumbs />
+
       <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/characters" element={<ProtectedRoute element={<CharacterCard />} />} />
-        <Route path="/character/:id" element={<ProtectedRoute element={<CharacterDetail />} />} />
-        <Route path="/create-character" element={<AdminRoute element={<CharacterForm />} />} />
-        <Route path="/users" element={<AdminRoute element={<UserList />} />} />
+        <Route path='/' element={<MainPage />} />
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/register' element={<RegisterPage />} />
+        <Route
+          path='/characters'
+          element={<ProtectedRoute element={<CharacterCard />} />}
+        />
+        <Route
+          path='/character/:id'
+          element={<ProtectedRoute element={<CharacterDetail />} />}
+        />
+        <Route
+          path='/create-character'
+          element={<AdminRoute element={<CharacterForm />} />}
+        />
+        <Route path='/users' element={<AdminRoute element={<UserList />} />} />
       </Routes>
     </AuthProvider>
   </Router>

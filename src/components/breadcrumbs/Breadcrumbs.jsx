@@ -36,6 +36,11 @@ const Breadcrumbs = () => {
     }
   }, [pathnames]);
 
+  const capitalize = (s) => {
+    if (typeof s !== 'string') return '';
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
+
   return (
     <nav className='breadcrumbs'>
       <ul>
@@ -43,13 +48,16 @@ const Breadcrumbs = () => {
           <Link to='/'>Home</Link>
         </li>
         {pathnames.map((value, index) => {
+          const isCharacterPage = value === 'character';
           const to = `/${pathnames.slice(0, index + 1).join('/')}`;
           return (
             <li key={to}>
               {index === 1 && characterName ? (
-                <span>{characterName}</span>
+                <span>{capitalize(characterName)}</span>
               ) : (
-                <Link to={to}>{value}</Link>
+                <Link to={isCharacterPage ? '/characters' : to}>
+                  {capitalize(isCharacterPage ? 'characters' : value)}
+                </Link>
               )}
             </li>
           );
