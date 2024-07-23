@@ -9,7 +9,7 @@ dotenv.config(); // Load environment variables from .env file
 
 const app = express();
 const PORT = process.env.PORT || 5001;
-const JWT_SECRET = JWT_SECRET; // Use the JWT secret key from the environment
+const JWT_SECRET = process.env.JWT_SECRET; // Use the JWT secret key from the environment
 
 console.log('JWT_SECRET:', JWT_SECRET); // Verify the secret key is loaded
 

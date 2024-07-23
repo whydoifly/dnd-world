@@ -1,4 +1,3 @@
-// src/components/Breadcrumbs.jsx
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import './Breadcrumbs.css';

@@ -1,6 +1,6 @@
 // src/components/UserList.jsx
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import './UserList.css';
 
 const UserList = () => {

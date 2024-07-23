@@ -1,19 +1,17 @@
-// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import MainPage from './components/MainPage';
-import LoginPage from './components/LoginPage';
-import RegisterPage from './components/RegisterPage';
-import CharacterCard from './components/CharacterCard';
-import CharacterDetail from './components/CharacterDetail';
-import CharacterForm from './components/CharacterForm';
-import UserList from './components/UserList';
-import Breadcrumbs from './components/Breadcrumbs';
-import NavBar from './components/NavBar';
-import { AuthProvider, useAuth } from './AuthContext';
-import './components/CharacterForm.css';
+import MainPage from './pages/MainPage';
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+import CharacterCard from './pages/character/CharacterCard';
+import CharacterDetail from './pages/character/CharacterDetail';
+import CharacterForm from './pages/character/CharacterForm';
+import UserList from './pages/user/UserList';
+import Breadcrumbs from './components/breadcrumbs/Breadcrumbs';
+import NavBar from './components/navbar/NavBar';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 
-import './App.css';
+import './assets/styles/global.css';
 
 const ProtectedRoute = ({ element }) => {
   const { user } = useAuth();
