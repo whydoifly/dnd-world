@@ -12,7 +12,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(username, password, navigate);
+    login(username, password, navigate('/'));
   };
 
   return (
