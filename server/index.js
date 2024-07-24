@@ -1,21 +1,44 @@
+// server/index.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const path = require('path');
+const fs = require('fs');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
-dotenv.config(); // Load environment variables from .env file
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
-const JWT_SECRET = process.env.JWT_SECRET; // Use the JWT secret key from the environment
+const JWT_SECRET = process.env.JWT_SECRET;
 
-console.log('JWT_SECRET:', JWT_SECRET); // Verify the secret key is loaded
+console.log('JWT_SECRET:', JWT_SECRET);
+
+// Ensure the uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json({ limit: '50mb' }));
+app.use(cookieParser());
+app.use(
+  session({
+    secret: JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
+  })
+);
+
+// Static folder for uploaded images
+app.use('/uploads', express.static(uploadsDir));
 
 // MongoDB Connection
 const mongoURI = 'mongodb://localhost:27017/dnd-app';
@@ -46,7 +69,7 @@ const characterSchema = new mongoose.Schema({
     constitution: { type: Number, required: true },
     intelligence: { type: Number, required: true },
     wisdom: { type: Number, required: true },
-    charisma: { type: Number, required: true }
+    charisma: { type: Number, required: true },
   },
   savingThrows: { type: String, required: true },
   skills: { type: String, required: true },
@@ -57,15 +80,14 @@ const characterSchema = new mongoose.Schema({
   legendaryResistance: { type: String },
   actions: { type: String, required: true },
   legendaryActions: { type: String },
-  image: { type: String, required: true }
+  imageUrl: { type: String, required: true },
 });
 
 const Character = mongoose.model('Character', characterSchema);
 
 // Middleware to verify JWT
 const verifyToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const token = req.session.token;
   if (!token)
     return res
       .status(401)
@@ -92,7 +114,6 @@ app.post('/api/register', async (req, res) => {
   const { username, password, email, isAdmin } = req.body;
 
   try {
-    // Check if the username already exists
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
       if (existingUser.username === username) {
@@ -102,7 +123,6 @@ app.post('/api/register', async (req, res) => {
       }
     }
 
-    // If the username is not taken, proceed to create a new user
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
       username,
@@ -131,7 +151,13 @@ app.post('/api/login', async (req, res) => {
   const token = jwt.sign({ _id: user._id, isAdmin: user.isAdmin }, JWT_SECRET, {
     expiresIn: '1h',
   });
+  req.session.token = token;
   res.json({ token, isAdmin: user.isAdmin });
+});
+
+app.get('/api/logout', (req, res) => {
+  req.session.destroy();
+  res.json({ message: 'Logout successful' });
 });
 
 app.get('/api/characters', verifyToken, async (req, res) => {
@@ -147,19 +173,41 @@ app.get('/api/characters', verifyToken, async (req, res) => {
 app.post('/api/characters', verifyToken, isAdmin, async (req, res) => {
   try {
     const {
-      name, armorClass, hitPoints, speed,
-      attributes, savingThrows, skills,
-      damageImmunities, senses, languages, challenge,
-      legendaryResistance, actions, legendaryActions, image
+      name,
+      armorClass,
+      hitPoints,
+      speed,
+      attributes,
+      savingThrows,
+      skills,
+      damageImmunities,
+      senses,
+      languages,
+      challenge,
+      legendaryResistance,
+      actions,
+      legendaryActions,
+      imageUrl,
     } = req.body;
 
     const newCharacter = new Character({
-      name, armorClass, hitPoints, speed,
-      attributes, savingThrows, skills,
-      damageImmunities, senses, languages, challenge,
-      legendaryResistance, actions, legendaryActions, image
+      name,
+      armorClass,
+      hitPoints,
+      speed,
+      attributes,
+      savingThrows,
+      skills,
+      damageImmunities,
+      senses,
+      languages,
+      challenge,
+      legendaryResistance,
+      actions,
+      legendaryActions,
+      imageUrl,
     });
-    
+
     await newCharacter.save();
     res.status(201).json(newCharacter);
   } catch (err) {
@@ -168,7 +216,6 @@ app.post('/api/characters', verifyToken, isAdmin, async (req, res) => {
   }
 });
 
-// Route to get a specific character by ID
 app.get('/api/characters/:id', verifyToken, async (req, res) => {
   try {
     const character = await Character.findById(req.params.id);
@@ -182,7 +229,6 @@ app.get('/api/characters/:id', verifyToken, async (req, res) => {
   }
 });
 
-
 app.delete('/api/characters/:id', verifyToken, isAdmin, async (req, res) => {
   try {
     const characterId = req.params.id;
@@ -194,10 +240,9 @@ app.delete('/api/characters/:id', verifyToken, isAdmin, async (req, res) => {
   }
 });
 
-// Route to get all users (admin only)
 app.get('/api/users', verifyToken, isAdmin, async (req, res) => {
   try {
-    const users = await User.find({}, '-password'); // Exclude password field
+    const users = await User.find({}, '-password');
     res.json(users);
   } catch (err) {
     console.error('Error fetching users:', err);
@@ -205,7 +250,6 @@ app.get('/api/users', verifyToken, isAdmin, async (req, res) => {
   }
 });
 
-// Route to delete a user (admin only)
 app.delete('/api/users/:id', verifyToken, isAdmin, async (req, res) => {
   try {
     const userId = req.params.id;
@@ -217,7 +261,6 @@ app.delete('/api/users/:id', verifyToken, isAdmin, async (req, res) => {
   }
 });
 
-// Route to update a user role (admin only)
 app.put('/api/users/:id', verifyToken, isAdmin, async (req, res) => {
   try {
     const userId = req.params.id;

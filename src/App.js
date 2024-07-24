@@ -19,13 +19,15 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import './assets/styles/global.css';
 
 const ProtectedRoute = ({ element }) => {
-  const { user } = useAuth();
-  return user ? element : <Navigate to='/login' />;
+  const { user, loading } = useAuth();
+  if (loading) return <div>Loading...</div>;
+  return user ? element : <Navigate to="/login" />;
 };
 
 const AdminRoute = ({ element }) => {
-  const { user } = useAuth();
-  return user && user.isAdmin ? element : <Navigate to='/login' />;
+  const { user, loading } = useAuth();
+  if (loading) return <div>Loading...</div>;
+  return user && user.isAdmin ? element : <Navigate to="/login" />;
 };
 
 const App = () => (

@@ -1,4 +1,4 @@
-// src/components/NavBar.jsx
+// src/components/navbar/NavBar.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -10,41 +10,41 @@ const NavBar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/')
+    navigate('/login');
   };
 
   return (
-    <nav className={`navbar ${user && user.isAdmin ? 'navbar-admin' : ''}`}>
+    <nav className='navbar'>
       <ul>
         <li>
-          <Link to="/">Home</Link>
+          <Link to='/'>Home</Link>
         </li>
-        {user ? (
+        {user && (
+          <li>
+            <Link to='/characters'>Characters</Link>
+          </li>
+        )}
+        {user && user.isAdmin && (
           <>
             <li>
-              <Link to="/characters">Characters</Link>
+              <Link to='/create-character'>Create Character</Link>
             </li>
-            {user.isAdmin && (
-              <>
-                <li>
-                  <Link to="/create-character">Create Character</Link>
-                </li>
-                <li>
-                  <Link to="/users">Manage Users</Link>
-                </li>
-              </>
-            )}
             <li>
-              <button onClick={handleLogout}>Logout</button>
+              <Link to='/users'>Manage Users</Link>
             </li>
           </>
+        )}
+        {user ? (
+          <li>
+            <button onClick={handleLogout}>Logout</button>
+          </li>
         ) : (
           <>
             <li>
-              <Link to="/login">Login</Link>
+              <Link to='/login'>Login</Link>
             </li>
             <li>
-              <Link to="/register">Register</Link>
+              <Link to='/register'>Register</Link>
             </li>
           </>
         )}

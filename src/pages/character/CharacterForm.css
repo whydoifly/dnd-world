@@ -1,47 +1,72 @@
-/* src/components/CharacterForm.css */
-.character-form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f7f7f7;
-}
+/* src/pages/character/CharacterForm.css */
 
-.character-form {
-    background-color: white;
+.character-form-container {
+    max-width: 600px;
+    margin: 0 auto;
     padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .character-form h2 {
     text-align: center;
     margin-bottom: 20px;
-    color: #333;
 }
 
-.character-form input,
-.character-form textarea {
+.character-form .form-group {
+    margin-bottom: 15px;
+}
+
+.character-form .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.character-form .form-group input,
+.character-form .form-group textarea {
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
-    border-radius: 3px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.character-form .form-group input[type="file"] {
+    padding: 3px;
+}
+
+.character-form .form-group textarea {
+    resize: vertical;
+    min-height: 60px;
 }
 
 .character-form button {
+    display: block;
     width: 100%;
     padding: 10px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: bold;
 }
 
 .character-form button:hover {
     background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .character-form-container {
+        padding: 10px;
+    }
+
+    .character-form button {
+        padding: 8px;
+        font-size: 14px;
+    }
 }

@@ -4,18 +4,19 @@ import { useAuth } from '../../contexts/AuthContext';
 import './UserList.css';
 
 const UserList = () => {
+  const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
-  const { user } = useAuth();
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:5001/api/users', {
           headers: {
-            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`,
           },
+          credentials: 'include',
         });
         if (!response.ok) {
           const errorData = await response.json();
@@ -36,12 +37,13 @@ const UserList = () => {
 
   const deleteUser = async (id) => {
     try {
-      const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:5001/api/users/${id}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`,
         },
+        credentials: 'include',
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -56,13 +58,13 @@ const UserList = () => {
 
   const toggleAdmin = async (id, currentStatus) => {
     try {
-      const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:5001/api/users/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${user.token}`,
         },
+        credentials: 'include',
         body: JSON.stringify({ isAdmin: !currentStatus }),
       });
       if (!response.ok) {

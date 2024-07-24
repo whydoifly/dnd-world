@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+
 import './Breadcrumbs.css';
 
 const Breadcrumbs = () => {
+  const { user } = useAuth();
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter((x) => x);
 
@@ -10,14 +13,15 @@ const Breadcrumbs = () => {
 
   useEffect(() => {
     const fetchCharacterName = async (id) => {
-      const token = localStorage.getItem('token');
       try {
         const response = await fetch(
           `http://localhost:5001/api/characters/${id}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`,
             },
+            credentials: 'include'
           }
         );
         if (response.ok) {
