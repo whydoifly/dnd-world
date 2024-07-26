@@ -1,15 +1,19 @@
 // src/components/RegisterPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import './Auth.css';
 
 const RegisterPage = () => {
+  const { user } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  console.log(user)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +23,9 @@ const RegisterPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`,
         },
+        credentials: 'include',
         body: JSON.stringify({ username, password, email, isAdmin }),
       });
 

@@ -21,13 +21,13 @@ import './assets/styles/global.css';
 const ProtectedRoute = ({ element }) => {
   const { user, loading } = useAuth();
   if (loading) return <div>Loading...</div>;
-  return user ? element : <Navigate to="/login" />;
+  return user ? element : <Navigate to='/login' />;
 };
 
 const AdminRoute = ({ element }) => {
   const { user, loading } = useAuth();
   if (loading) return <div>Loading...</div>;
-  return user && user.isAdmin ? element : <Navigate to="/login" />;
+  return user && user.isAdmin ? element : <Navigate to='/login' />;
 };
 
 const App = () => (
