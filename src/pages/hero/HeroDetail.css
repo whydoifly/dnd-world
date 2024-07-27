@@ -1,0 +1,33 @@
+.hero-detail-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.hero-detail-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.hero-detail-container .form-group {
+    margin-bottom: 15px;
+}
+
+.hero-detail-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.hero-detail-container input[type="text"],
+.hero-detail-container input[type="number"],
+.hero-detail-container input[type="url"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}

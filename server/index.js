@@ -8,6 +8,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const characterRoutes = require('./routes/characters');
 const userRoutes = require('./routes/users');
+const heroRoutes = require('./routes/heroes');
 
 dotenv.config();
 
@@ -37,5 +38,6 @@ connectDB();
 app.use('/api/auth', authRoutes);
 app.use('/api/characters', characterRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/heroes', heroRoutes);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

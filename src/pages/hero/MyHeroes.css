@@ -1,0 +1,61 @@
+.my-heroes-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.my-heroes-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.create-hero-button {
+    display: block;
+    margin: 0 auto 20px auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.create-hero-button:hover {
+    background-color: #0056b3;
+}
+
+.heroes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.hero-card {
+    flex: 1 1 calc(33.333% - 20px);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.hero-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.view-details-button {
+    display: block;
+    margin: 10px auto 0 auto;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.view-details-button:hover {
+    background-color: #0056b3;
+}

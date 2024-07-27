@@ -19,10 +19,23 @@ const NavBar = () => {
         <li>
           <Link to='/'>Home</Link>
         </li>
+
         {user && (
-          <li>
-            <Link to='/characters'>Characters</Link>
-          </li>
+          <>
+            <li>
+              <Link to='/my-heroes' className='navbar-link'>
+                My Heroes
+              </Link>
+            </li>
+            <li>
+              <Link to='/create-hero' className='navbar-link'>
+                Create Hero
+              </Link>
+            </li>
+            <li>
+              <Link to='/characters'>Characters</Link>
+            </li>
+          </>
         )}
         {user && user.isAdmin && (
           <>

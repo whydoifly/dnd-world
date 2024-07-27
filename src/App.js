@@ -11,6 +11,9 @@ import RegisterPage from './pages/auth/RegisterPage';
 import CharacterCard from './pages/character/CharacterCard';
 import CharacterDetail from './pages/character/CharacterDetail';
 import CharacterForm from './pages/character/CharacterForm';
+import HeroForm from './pages/hero/HeroForm';
+import MyHeroes from './pages/hero/MyHeroes';
+import HeroDetail from './pages/hero/HeroDetail';
 import UserList from './pages/user/UserList';
 import Breadcrumbs from './components/breadcrumbs/Breadcrumbs';
 import NavBar from './components/navbar/NavBar';
@@ -53,6 +56,18 @@ const App = () => (
           element={<AdminRoute element={<CharacterForm />} />}
         />
         <Route path='/users' element={<AdminRoute element={<UserList />} />} />
+        <Route
+          path='/create-hero'
+          element={<ProtectedRoute element={<HeroForm />} />}
+        />
+        <Route
+          path='/my-heroes'
+          element={<ProtectedRoute element={<MyHeroes />} />}
+        />
+        <Route
+          path='/hero/:id'
+          element={<ProtectedRoute element={<HeroDetail />} />}
+        />
       </Routes>
     </AuthProvider>
   </Router>
