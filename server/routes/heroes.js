@@ -16,6 +16,20 @@ router.get('/', verifyToken, async (req, res) => {
   }
 });
 
+// Get hero by ID
+router.get('/:id', verifyToken, async (req, res) => {
+  try {
+    const hero = await Hero.findById(req.params.id);
+    if (!hero) {
+      return res.status(404).json({ message: 'Hero not found' });
+    }
+    res.json(hero);
+  } catch (err) {
+    console.error('Error fetching hero:', err);
+    res.status(500).json({ message: 'Error fetching hero' });
+  }
+});
+
 // Create a new hero
 router.post('/', verifyToken, async (req, res) => {
   const {

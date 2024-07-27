@@ -58,16 +58,27 @@ const HeroDetail = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    fetch(`http://localhost:5001/api/heroes/${id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${user.token}`,
-      },
-      credentials: 'include',
-    })
-      .then((response) => response.json())
-      .then((data) => dispatch({ type: 'SET_STATE', payload: data }))
-      .catch((err) => console.error('Error fetching hero:', err));
+    const fetchHero = async () => {
+      try {
+        const response = await fetch(`http://localhost:5001/api/heroes/${id}`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Unexpected response format');
+        }
+
+        const data = await response.json();
+        dispatch({ type: 'SET_STATE', payload: data });
+      } catch (err) {
+        console.error('Error fetching hero:', err);
+      }
+    };
+
+    fetchHero();
   }, [id, user.token]);
 
   const handleInputChange = (e) => {

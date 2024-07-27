@@ -19,9 +19,9 @@ const Breadcrumbs = () => {
           {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${user.token}`,
+              Authorization: `Bearer ${user.token}`,
             },
-            credentials: 'include'
+            credentials: 'include',
           }
         );
         if (response.ok) {
@@ -53,15 +53,21 @@ const Breadcrumbs = () => {
         </li>
         {pathnames.map((value, index) => {
           const isCharacterPage = value === 'character';
+          const isHeroPage = value === 'hero';
           const to = `/${pathnames.slice(0, index + 1).join('/')}`;
           return (
             <li key={to}>
               {index === 1 && characterName ? (
                 <span>{capitalize(characterName)}</span>
               ) : (
-                <Link to={isCharacterPage ? '/characters' : to}>
-                  {capitalize(isCharacterPage ? 'characters' : value)}
-                </Link>
+                <>
+                  <Link to={isCharacterPage ? '/characters' : to}>
+                    {capitalize(isCharacterPage ? 'characters' : value)}
+                  </Link>
+                  <Link to={isHeroPage ? '/heroes' : to}>
+                    {capitalize(isHeroPage ? 'heroes' : '')}
+                  </Link>
+                </>
               )}
             </li>
           );
