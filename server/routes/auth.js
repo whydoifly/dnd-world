@@ -10,35 +10,42 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const router = express.Router();
 
+// User registration
 router.post('/register', async (req, res) => {
-  const { username, password, email, isAdmin } = req.body;
+  const { username, email, password, isAdmin } = req.body;
 
   try {
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      if (existingUser.username === username) {
-        return res.status(400).json({ message: 'Username already exists.' });
-      } else if (existingUser.email === email) {
-        return res.status(400).json({ message: 'Email already exists.' });
-      }
+      return res.status(400).json({ message: 'Email already in use' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newUser = new User({
       username,
-      password: hashedPassword,
       email,
+      password: hashedPassword,
       isAdmin,
     });
-    await user.save();
 
-    res.status(201).json({ message: 'User registered.' });
+    console.log(newUser)
+
+    await newUser.save();
+
+    const token = jwt.sign({ _id: newUser._id }, JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    res.json({ token, user: newUser });
   } catch (err) {
-    console.error('Error registering user:', err);
-    res.status(500).json({ message: 'Error registering user' });
+    console.error('Error during registration:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
+// User login
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 

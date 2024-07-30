@@ -8,7 +8,7 @@ const router = express.Router();
 // Get all users
 router.get('/', verifyToken, isAdmin, async (req, res) => {
   try {
-    const users = await User.find({}, '-password');
+    const users = await User.find({});
     res.json(users);
   } catch (err) {
     console.error('Error fetching users:', err);
@@ -37,6 +37,23 @@ router.put('/:id/password', verifyToken, isAdmin, async (req, res) => {
   } catch (err) {
     console.error('Error updating password:', err);
     res.status(500).json({ message: 'Error updating password' });
+  }
+});
+
+// Delete user by ID
+router.delete('/:id', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      console.error('User not found');
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ message: 'User deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).json({ message: 'Error deleting user' });
   }
 });
 

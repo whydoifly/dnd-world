@@ -35,44 +35,35 @@ const UserList = () => {
     });
   };
 
-  const toggleVisibility = (userId) => {
-    setVisible({
-      ...visible,
-      [userId]: !visible[userId],
-    });
-  };
-
-  const savePassword = async (userId) => {
+  const handleDeleteUser = async (userId) => {
     try {
       const response = await fetch(
-        `http://localhost:5001/api/users/${userId}/password`,
+        `http://localhost:5001/api/users/${userId}`,
         {
-          method: 'PUT',
+          method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${user.token}`,
           },
           credentials: 'include',
-          body: JSON.stringify({ password: passwords[userId] }),
         }
       );
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Unexpected response format');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
       }
-
-      const data = await response.json();
-      if (response.ok) {
-        setError('');
-        alert('Password updated successfully');
-      } else {
-        setError(data.message || 'Error updating password');
-      }
-    } catch (err) {
-      console.error('Error updating password:', err);
-      setError('Error updating password');
+      setUsers(users.filter((user) => user._id !== userId));
+      alert('User deleted successfully');
+    } catch (error) {
+      console.error('Error deleting user:', error);
     }
+  };
+
+  const toggleVisibility = (userId) => {
+    setVisible({
+      ...visible,
+      [userId]: !visible[userId],
+    });
   };
 
   const renderUsers = () =>
@@ -90,7 +81,7 @@ const UserList = () => {
         <button onClick={() => toggleVisibility(user._id)}>
           {visible[user._id] ? 'Hide' : 'Show'}
         </button>
-        <button onClick={() => savePassword(user._id)}>Save</button>
+        <button onClick={() => handleDeleteUser(user._id)}>Delete</button>
       </div>
     ));
 

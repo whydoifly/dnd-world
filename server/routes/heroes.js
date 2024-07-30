@@ -123,4 +123,25 @@ router.put('/:id', verifyToken, async (req, res) => {
   }
 });
 
+// Delete hero by ID
+router.delete('/:id', verifyToken, async (req, res) => {
+  try {
+    const heroId = req.params.id;
+    const hero = await Hero.findByIdAndDelete(heroId);
+    if (!hero) {
+      return res.status(404).json({ message: 'Hero not found' });
+    }
+
+    // Ensure the user deleting the hero is the creator
+    if (hero.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    res.json({ message: 'Hero deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting hero:', err);
+    res.status(500).json({ message: 'Error deleting hero' });
+  }
+});
+
 module.exports = router;

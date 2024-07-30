@@ -13,27 +13,11 @@ const MyHeroes = () => {
       try {
         const response = await fetch('http://localhost:5001/api/heroes', {
           headers: {
-            'Content-Type': 'application/json',
             Authorization: `Bearer ${user.token}`,
           },
-          credentials: 'include',
         });
-
-        // Check if the response is JSON
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new Error('Unexpected response format');
-        }
-
         const data = await response.json();
-        console.log('Received data:', data); // Log the received data
-
-        if (Array.isArray(data)) {
-          setHeroes(data);
-        } else {
-          setHeroes([]);
-          setError('Unexpected response format');
-        }
+        setHeroes(data);
       } catch (err) {
         console.error('Error fetching heroes:', err);
         setError('Error fetching heroes');
@@ -43,9 +27,40 @@ const MyHeroes = () => {
     fetchHeroes();
   }, [user.token]);
 
-  if (error) {
-    return <div className='error-message'>{error}</div>;
-  }
+  const deleteHero = async (heroId) => {
+    if (!window.confirm('Are you sure you want to delete this hero?')) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:5001/api/heroes/${heroId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Unexpected response format');
+      }
+
+      const data = await response.json();
+      console.log('Server response:', data);
+      if (response.ok) {
+        setHeroes(heroes.filter((hero) => hero._id !== heroId));
+        setError('');
+        alert('Hero deleted successfully');
+      } else {
+        setError(data.message || 'Error deleting hero');
+      }
+    } catch (err) {
+      console.error('Error deleting hero:', err);
+      setError('Error deleting hero');
+    }
+  };
 
   return (
     <div className='my-heroes-container'>
@@ -54,6 +69,7 @@ const MyHeroes = () => {
         Create New Hero
       </Link>
       <div className='heroes-list'>
+        {error && <p className='error-message'>{error}</p>}
         {heroes.length > 0 ? (
           heroes.map((hero) => (
             <div key={hero._id} className='hero-card'>
@@ -65,6 +81,11 @@ const MyHeroes = () => {
               <Link to={`/hero/${hero._id}`} className='view-details-button'>
                 View Details
               </Link>
+              <button
+                onClick={() => deleteHero(hero._id)}
+                className='delete-button'>
+                Delete
+              </button>
             </div>
           ))
         ) : (

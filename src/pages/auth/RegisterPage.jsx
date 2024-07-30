@@ -5,39 +5,23 @@ import { useAuth } from '../../contexts/AuthContext';
 import './Auth.css';
 
 const RegisterPage = () => {
-  const { user } = useAuth();
+  const { register } = useAuth();
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
-
-  console.log(user)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5001/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`,
-        },
-        credentials: 'include',
-        body: JSON.stringify({ username, password, email, isAdmin }),
-      });
-
-      if (response.ok) {
-        navigate('/login');
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message);
-      }
-    } catch (error) {
-      console.error('Error registering user:', error);
-      setError('An error occurred during registration.');
+      await register(username, email, password, isAdmin);
+      navigate('/');
+    } catch (err) {
+      console.error('Error during registration:', err);
+      setError(err.message || 'Registration failed');
     }
   };
 

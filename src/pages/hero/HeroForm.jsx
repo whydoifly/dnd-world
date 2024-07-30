@@ -81,24 +81,24 @@ const HeroForm = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     dispatch({ type: 'UPDATE_FIELD', payload: { name, value } });
-    handleAutoSave(name, value);
+    // handleAutoSave(name, value);
   };
 
-  const handleAutoSave = async (name, value) => {
-    try {
-      await fetch(`http://localhost:5001/api/heroes/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`,
-        },
-        credentials: 'include',
-        body: JSON.stringify({ [name]: value }),
-      });
-    } catch (err) {
-      console.error('Error auto-saving hero:', err);
-    }
-  };
+//   const handleAutoSave = async (name, value) => {
+//     try {
+//       await fetch(`http://localhost:5001/api/heroes/${id}`, {
+//         method: 'PUT',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Authorization': `Bearer ${user.token}`,
+//         },
+//         credentials: 'include',
+//         body: JSON.stringify({ [name]: value }),
+//       });
+//     } catch (err) {
+//       console.error('Error auto-saving hero:', err);
+//     }
+//   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

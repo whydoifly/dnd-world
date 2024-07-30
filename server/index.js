@@ -22,6 +22,10 @@ if (!SESSION_SECRET) {
   throw new Error('SESSION_SECRET is required');
 }
 
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET is required');
+}
+
 console.log('JWT_SECRET:', JWT_SECRET);
 
 // Ensure the uploads directory exists
@@ -34,14 +38,12 @@ if (!fs.existsSync(uploadsDir)) {
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
-app.use(
-  session({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false },
-  })
-);
+app.use(session({
+  secret: SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
 
 app.use('/uploads', express.static(uploadsDir));
 

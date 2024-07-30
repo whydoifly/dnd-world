@@ -90,7 +90,7 @@ const CharacterForm = () => {
   };
 
   const renderInput = (label, name, type = 'text') => (
-    <div class='form-group' key={name}>
+    <div className='form-group' key={name}>
       <label>{label}:</label>
       <input
         type={type}
@@ -130,7 +130,7 @@ const CharacterForm = () => {
   ];
 
   return (
-    <div class='character-form-container'>
+    <div className='character-form-container'>
       <h2>Create Character</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {message && <p style={{ color: 'green' }}>{message}</p>}

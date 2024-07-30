@@ -59,3 +59,17 @@
 .view-details-button:hover {
     background-color: #0056b3;
 }
+
+.delete-button {
+    padding: 8px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #dc3545;
+    color: #fff;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
