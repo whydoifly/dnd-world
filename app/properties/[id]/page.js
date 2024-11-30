@@ -19,14 +19,6 @@ export default function PropertyDetail() {
   const id = pathname.split('/').pop();
 
   useEffect(() => {
-    async function checkAdminStatus() {
-      const res = await fetch('/api/check-admin');
-      const data = await res.json();
-      setIsAdmin(data.isAdmin);
-    }
-
-    checkAdminStatus();
-
     if (!id) return;
 
     async function fetchProperty() {

@@ -29,13 +29,6 @@ export default async function Dashboard() {
                 Управление пользователями
               </Link>
             </li>
-            <li>
-              <Link
-                href='/admin/properties'
-                className='text-blue-500 hover:underline'>
-                Управление объектами
-              </Link>
-            </li>
           </ul>
         </div>
       )}

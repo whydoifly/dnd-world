@@ -5,7 +5,7 @@ import Property from '@/models/Property';
 export async function GET() {
   try {
     await dbConnect();
-    const properties = await Property.find({}).lean();
+    const properties = await Property.find().sort({ createdAt: -1 });
     return NextResponse.json({ properties });
   } catch (error) {
     console.error('Error fetching properties:', error);

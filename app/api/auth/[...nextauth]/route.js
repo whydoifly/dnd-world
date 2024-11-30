@@ -48,6 +48,10 @@ export const authOptions = {
     signIn: '/login',
   },
   secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: 'jwt',
+    maxAge: 6 * 60 * 60, 
+  },
 };
 
 const handler = NextAuth(authOptions);
